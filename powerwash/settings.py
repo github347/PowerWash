@@ -52,10 +52,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'powerwash.urls'
 
+# Redirect to home URL after login (Default redirects to /accounts/profile/) 
+LOGIN_REDIRECT_URL = '/' 
+LOGOUT_REDIRECT_URL = '/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'powerwash/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
