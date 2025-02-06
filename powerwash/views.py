@@ -16,22 +16,42 @@ def login_user(request):
             messages.error(request, 'Login failed. Please try again.')
     return render(request, 'registration/login.html', {})
 
+# def register_user(request): 
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#              form.save()
+#              username = form.cleaned_data.get('username') 
+#              password = form.cleaned_data.get('password1') 
+#              user = authenticate(request, username=username, password=password) 
+#              login(request, user) 
+#              messages.success(request, 'Registration successful') 
+#              return redirect('home') 
+#         else: 
+#             messages.error(request, 'Registration failed. Please try again.') 
+#     else: 
+#         form = UserCreationForm() 
+#     return render(request, 'registration/register.html', {'form': form})
+
+from .forms import CustomUserCreationForm
+
 def register_user(request): 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-             form.save()
-             username = form.cleaned_data.get('username') 
-             password = form.cleaned_data.get('password1') 
-             user = authenticate(request, username=username, password=password) 
-             login(request, user) 
-             messages.success(request, 'Registration successful') 
-             return redirect('home') 
+            form.save()
+            username = form.cleaned_data.get('username') 
+            password = form.cleaned_data.get('password1') 
+            user = authenticate(request, username=username, password=password) 
+            login(request, user) 
+            messages.success(request, 'Registration successful') 
+            return redirect('home') 
         else: 
             messages.error(request, 'Registration failed. Please try again.') 
     else: 
-        form = UserCreationForm() 
+        form = CustomUserCreationForm() 
     return render(request, 'registration/register.html', {'form': form})
+
 
 def home(request):
     return render(request, 'home.html')

@@ -3,14 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'powerwash/styles.css' %}">
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    <div class="container">
+        <h2>Register for a PowerWash Account</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                <small class="help-text">{{ form.first_name.help_text }}</small>
+            </div>
+            <div>
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                <small class="help-text">{{ form.last_name.help_text }}</small>
+            </div>
+            <div>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                <small class="help-text">{{ form.username.help_text }}</small>
+            </div>
+            <div>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                <small class="help-text">{{ form.email.help_text }}</small>
+            </div>
+            <div>
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                <small class="help-text">{{ form.password1.help_text }}</small>
+            </div>
+            <div>
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                <small class="help-text">{{ form.password2.help_text }}</small>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
 </body>
 </html>
