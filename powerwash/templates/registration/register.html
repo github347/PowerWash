@@ -24,6 +24,7 @@
             padding: 40px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.5s ease-in-out;
+            box-sizing: border-box;
         }
 
         h2 {
@@ -142,22 +143,27 @@
                 opacity: 1;
             }
         }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+                max-width: 90%;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            button {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Register for a PowerWash Account</h2>
-
-        <!-- Display global errors -->
-        {% if form.errors %}
-            <ul class="errorlist">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        {% endif %}
 
         <form method="post">
             {% csrf_token %}
