@@ -5,45 +5,259 @@
     <title>Register</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'powerwash/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #72c6e0, #9c89b8);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #72c6e0;
+            outline: none;
+        }
+
+        .form-group small {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .errorlist {
+            color: red;
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .errorlist li {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #888;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message, .error-message {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        /* Animation for fade-in effect */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h2>Register for a PowerWash Account</h2>
+
+        <!-- Display global errors -->
+        {% if form.errors %}
+            <ul class="errorlist">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
-            <div>
+            
+            <!-- First Name -->
+            <div class="form-group">
                 {{ form.first_name.label_tag }}
                 {{ form.first_name }}
                 <small class="help-text">{{ form.first_name.help_text }}</small>
+                {% if form.first_name.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.first_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-            <div>
+            
+            <!-- Last Name -->
+            <div class="form-group">
                 {{ form.last_name.label_tag }}
                 {{ form.last_name }}
                 <small class="help-text">{{ form.last_name.help_text }}</small>
+                {% if form.last_name.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.last_name.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-            <div>
+            
+            <!-- Username -->
+            <div class="form-group">
                 {{ form.username.label_tag }}
                 {{ form.username }}
                 <small class="help-text">{{ form.username.help_text }}</small>
+                {% if form.username.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.username.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-            <div>
+            
+            <!-- Email -->
+            <div class="form-group">
                 {{ form.email.label_tag }}
                 {{ form.email }}
                 <small class="help-text">{{ form.email.help_text }}</small>
+                {% if form.email.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-            <div>
+            
+            <!-- Password1 -->
+            <div class="form-group">
                 {{ form.password1.label_tag }}
                 {{ form.password1 }}
                 <small class="help-text">{{ form.password1.help_text }}</small>
+                {% if form.password1.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password1.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
-            <div>
+            
+            <!-- Password2 -->
+            <div class="form-group">
                 {{ form.password2.label_tag }}
                 {{ form.password2 }}
                 <small class="help-text">{{ form.password2.help_text }}</small>
+                {% if form.password2.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.password2.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
+            
             <button type="submit">Register</button>
         </form>
+
         <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+
+        {% if messages %}
+            <div class="success-message">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
