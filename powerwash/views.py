@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
@@ -79,3 +80,6 @@ def login_view(request):
             messages.error(request, "Invalid username or password")
 
     return render(request, "login.html")
+
+def service_view(request):
+    return HttpResponse("Hello, world. You're at the service page.")

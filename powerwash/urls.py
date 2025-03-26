@@ -32,4 +32,5 @@ urlpatterns = [
     path('login/', login_view, name='login'),  # Login route
     path('', views.index, name='index'),  # Home page route
     path('validate-password/', views.password_view, name='password_view'),  # Password validation route
+    path('service-view/', views.service_view, name='service_view') # Service page from service provider
 ]
