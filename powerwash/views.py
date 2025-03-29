@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, PasswordForm, SignInForm
+from .models import ServicePage, Service
 
 def login_user(request):
     if request.method == 'POST':
@@ -81,5 +82,8 @@ def login_view(request):
 
     return render(request, "login.html")
 
-def service_view(request):
-    return HttpResponse("Hello, world. You're at the service page.")
+def service_view(request, title):
+    SP = ServicePage.objects.get(title=title)
+    S = SP.service_set.get(id=1)
+    return HttpResponse("Hello, world. You're at the service page."
+                        "<h1>%s</h1><br></br><p>%s</p>" %(SP.title, S.name))
