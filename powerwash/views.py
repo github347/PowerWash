@@ -1,3 +1,5 @@
+from http.client import responses
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -82,8 +84,8 @@ def login_view(request):
 
     return render(request, "login.html")
 
-def service_view(request, title):
-    SP = ServicePage.objects.get(title=title)
-    S = SP.service_set.get(id=1)
-    return HttpResponse("Hello, world. You're at the service page."
-                        "<h1>%s</h1><br></br><p>%s</p>" %(SP.title, S.name))
+def service_view(response, title):
+    sp = ServicePage.objects.get(title=title)
+    s = sp.service_set.get(id=1)
+    return render(response, "powerwash/service.html", {})                     #HttpResponse("Hello, world. You're at the service page."
+                                         #"<h1>%s</h1><br></br><p>%s</p>" %(sp.title, str(s.name)))

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+#Service Page model. Should be one per user.
+#TODO: Flesh out the features and specific details.
 class ServicePage(models.Model):
     title = models.CharField(max_length=120)
     content = models.TextField()
@@ -8,6 +10,7 @@ class ServicePage(models.Model):
     def __str__(self):
         return self.title
 
+#Different services within a service page.
 class Service(models.Model):
     page = models.ForeignKey(ServicePage, on_delete=models.CASCADE) #Deletes all services within a service page when the page is deleted
     name = models.CharField(max_length=120)
