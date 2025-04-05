@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - PowerWash</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #00a8e8;
+            --accent-color: #ffd700;
+            --white: #ffffff;
+            --text-color: #333333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            padding: 0.875rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .logo-container {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-container h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .logo-container i {
+            color: var(--accent-color);
+            font-size: 1.75rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: #64748b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            padding-left: 1.25rem;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: #f8fafc;
+        }
+
+        .settings-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .settings-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .settings-section h2 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .settings-section h2 i {
+            width: 35px;
+            height: 35px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+
+        .option-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .option-title {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .option-description {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .save-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .save-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .danger-zone {
+            border: 2px solid #ef4444;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .danger-zone h2 {
+            color: #ef4444;
+            border-bottom-color: #fecaca;
+        }
+
+        .danger-zone h2 i {
+            background: #ef4444;
+        }
+
+        .danger-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .danger-button:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            margin-left: var(--sidebar-width);
+        }
+
+        .footer p {
+            color: #cbd5e1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section h3 i {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li i {
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .settings-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <h2><i class="fas fa-car-wash"></i> PowerWash</h2>
+            </div>
+            <nav class="dashboard-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main Menu</div>
+                    <div class="nav-item">
+                        <a href="{% url 'customer_dashboard' %}">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="{% url 'booking' %}">
+                            <i class="fas fa-calendar"></i>
+                            <span>Book a Service</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="{% url 'history' %}">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </a>
+                    </div>
+                </div>
+        
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    <div class="nav-item">
+                        <a href="{% url 'profile' %}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </div>
+                    <div class="nav-item active">
+                        <a href="{% url 'settings' %}">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                        <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="settings-header">
+                <h1>Settings</h1>
+                <p>Manage your account preferences and settings</p>
+            </div>
+
+            <div class="settings-section">
+                <h2><i class="fas fa-bell"></i> Notifications</h2>
+                <div class="settings-option">
+                    <div class="option-label">
+                        <span class="option-title">Email Notifications</span>
+                        <span class="option-description">Receive booking confirmations and updates</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div class="option-label">
+                        <span class="option-title">SMS Notifications</span>
+                        <span class="option-description">Get text messages for important updates</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div class="option-label">
+                        <span class="option-title">Marketing Communications</span>
+                        <span class="option-description">Receive special offers and promotions</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2><i class="fas fa-shield-alt"></i> Privacy and Security</h2>
+                <div class="form-group">
+                    <label class="form-label">Two-Factor Authentication</label>
+                    <div class="settings-option">
+                        <div class="option-label">
+                            <span class="option-title">Enable 2FA</span>
+                            <span class="option-description">Add an extra layer of security to your account</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2><i class="fas fa-language"></i> Language and Region</h2>
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-control">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time Zone</label>
+                    <select class="form-control">
+                        <option value="UTC">UTC (GMT+0)</option>
+                        <option value="EST">Eastern Time (GMT-5)</option>
+                        <option value="PST">Pacific Time (GMT-8)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-section danger-zone">
+                <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+                <div class="settings-option">
+                    <div class="option-label">
+                        <span class="option-title">Delete Account</span>
+                        <span class="option-description">Permanently delete your account and all data</span>
+                    </div>
+                    <button class="danger-button">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="save-button">
+                <i class="fas fa-save"></i>
+                Save Changes
+            </button>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-car-wash"></i> PowerWash</h3>
+                    <p>Connecting car owners with professional cleaning services since 2025.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Support</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-question-circle"></i><a href="/faq.html">FAQ</a></li>
+                        <li><i class="fas fa-shield-alt"></i><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><i class="fas fa-file-contract"></i><a href="/terms.html">Terms of Service</a></li>
+                        <li><i class="fas fa-headset"></i><a href="/help.html">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-address-card"></i> Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> support@powerwash.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 555-5555</li>
+                        <li><i class="fas fa-map-marker-alt"></i> TBA</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PowerWash. All rights reserved. | Created by ManoBG02</p>
+                <p>Current UTC Time: <span id="current-time">2025-04-01 02:25:11</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle form submission
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your save settings logic here
+            alert('Settings saved successfully!');
+        });
+
+        // Handle delete account
+        document.querySelector('.danger-button').addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                // Add your delete account logic here
+            }
+        });
+    </script>
+</body>
+
+</html>
