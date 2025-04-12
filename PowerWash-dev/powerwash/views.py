@@ -236,7 +236,6 @@ def profile_view(request):
 
     return render(request, 'dashboard/profile.html', context)
 
-
 # View for user settings (requires login)
 @login_required
 def settings_view(request):
@@ -281,5 +280,3 @@ def update_profile_image(request):
         })
     else:
         return JsonResponse({'status': 'error'}, status=400)
-
-    

@@ -165,7 +165,6 @@
             opacity: 0.1;
         }
 
-
         .profile-avatar {
             width: 150px;
             height: 150px;
@@ -562,11 +561,11 @@
             <div class="profile-header">
                 <div class="profile-avatar">
                     {% if user.profile.profile_image %}
-                        <img src="{{ user.profile.profile_image.url }}" alt="Profile Image">
+                        <img src="{{ user.profile.profile_image.url }}?{% now 'U' %}" alt="Profile Image">
                     {% else %}
                         <i class="fas fa-user"></i>
                     {% endif %}
-
+                
                     <!-- Camera icon triggers file selection -->
                     <div class="avatar-upload" title="Upload new photo">
                         <i class="fas fa-camera"></i>
