@@ -10,6 +10,7 @@ from .models import Profile
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
+from .models import UserSettings
 
 # View for user login
 def login_user(request):
@@ -239,7 +240,10 @@ def profile_view(request):
 # View for user settings (requires login)
 @login_required
 def settings_view(request):
-    """Renders and handles user settings, including account deletion."""
+    """Renders and handles user settings, including account deletion and settings updates."""
+    # Fetch the user's settings or create them if they don't exist
+    user_settings, created = UserSettings.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
         if 'delete_account' in request.POST:
             user = request.user
@@ -248,9 +252,32 @@ def settings_view(request):
             return redirect('home')
         else:
             # Handle other settings updates if needed
+            email_notifications = 'email_notifications' in request.POST
+            sms_notifications = 'sms_notifications' in request.POST
+            marketing_comm = 'marketing_comm' in request.POST
+            enable_2fa = 'enable_2fa' in request.POST
+            language = request.POST.get('language', 'en')  # Default to 'en' if not selected
+            time_zone = request.POST.get('time_zone', 'UTC')  # Default to 'UTC' if not selected
+
+            # Update user settings
+            user_settings.email_notifications = email_notifications
+            user_settings.sms_notifications = sms_notifications
+            user_settings.marketing_comm = marketing_comm
+            user_settings.enable_2fa = enable_2fa
+            user_settings.language = language
+            user_settings.time_zone = time_zone
+
+            # Save the updated settings
+            user_settings.save()
+
+            # Display a success message
             messages.success(request, 'Settings updated successfully!')
+
+            # Redirect to the settings page to show updated settings
             return redirect('settings')
-    return render(request, 'dashboard/settings.html')
+
+    # For GET request, pass the current settings to the template
+    return render(request, 'dashboard/settings.html', {'user_settings': user_settings})
 
 @login_required
 def update_profile_image(request):

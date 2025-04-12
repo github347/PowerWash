@@ -14,6 +14,18 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+class UserSettings(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email_notifications = models.BooleanField(default=True)
+    sms_notifications = models.BooleanField(default=False)
+    marketing_comm = models.BooleanField(default=False)
+    enable_2fa = models.BooleanField(default=False)
+    language = models.CharField(max_length=10, choices=[('en', 'English'), ('es', 'Español'), ('fr', 'Français')], default='en')
+    time_zone = models.CharField(max_length=50, choices=[('UTC', 'UTC (GMT+0)'), ('EST', 'Eastern Time (GMT-5)'), ('PST', 'Pacific Time (GMT-8)')], default='UTC')
+
+    def __str__(self):
+        return f"Settings for {self.user.username}"
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     print("create_user_profile called")
