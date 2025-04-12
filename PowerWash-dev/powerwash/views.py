@@ -5,6 +5,11 @@ from django.contrib.auth.decorators import login_required
 from .models import ServicePage, Service, Booking  # Import your models
 from django.contrib.auth import authenticate, login  # Import authentication functions
 from .forms import CustomUserCreationForm, PasswordForm, SignInForm  # Import your forms
+from django.http import JsonResponse
+from .models import Profile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 # View for user login
 def login_user(request):
@@ -197,25 +202,40 @@ def profile_view(request):
     """Renders and updates the user profile."""
     if request.method == 'POST':
         user = request.user
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.email = request.POST.get('email')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+
+        # Check for required fields and set defaults if not provided
+        if not first_name:
+            first_name = user.first_name  # Keep the existing first name if no new value provided
+        if not last_name:
+            last_name = user.last_name  # Keep the existing last name if no new value provided
+
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = request.POST.get('email', user.email)  # Default to current email if not provided
         user.save()
+
+        # Profile update
         profile = user.profile
-        profile.phone = request.POST.get('phone')
-        profile.address = request.POST.get('address')
-        profile.city = request.POST.get('city')
-        profile.postal_code = request.POST.get('postal_code')
+        profile.phone = request.POST.get('phone', profile.phone)  # Default to current profile data if not provided
+        profile.address = request.POST.get('address', profile.address)
+        profile.city = request.POST.get('city', profile.city)
+        profile.postal_code = request.POST.get('postal_code', profile.postal_code)
         profile.save()
+
         messages.success(request, 'Profile updated successfully!')
         return redirect('profile')
+
     context = {
         'total_bookings': Booking.objects.filter(user=request.user).count(),
         'completed_services': Booking.objects.filter(user=request.user, status='completed').count(),
         'loyalty_points': 0,  # Implement logic
         'recent_activities': []  # Implement logic
     }
+
     return render(request, 'dashboard/profile.html', context)
+
 
 # View for user settings (requires login)
 @login_required
@@ -232,4 +252,34 @@ def settings_view(request):
             messages.success(request, 'Settings updated successfully!')
             return redirect('settings')
     return render(request, 'dashboard/settings.html')
+
+@login_required
+def update_profile_image(request):
+    if request.method == 'POST' and request.FILES.get('profile_image'):
+        profile_image = request.FILES['profile_image']
+
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            # Create a new profile if it doesn't exist
+            profile = Profile.objects.create(user=request.user)
+
+        # Delete the old image if it exists
+        if profile.profile_image:
+            old_image_path = profile.profile_image.path
+            if os.path.isfile(old_image_path):
+                os.remove(old_image_path)
+
+        # Save the new image
+        profile.profile_image = profile_image
+        profile.save()
+
+        # Return new image URL for the frontend
+        return JsonResponse({
+            'status': 'success',
+            'image_url': profile.profile_image.url  # This will be the new image URL
+        })
+    else:
+        return JsonResponse({'status': 'error'}, status=400)
+
     
