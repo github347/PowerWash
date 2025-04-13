@@ -11,6 +11,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
 from .models import UserSettings
+from django.utils import timezone
 
 # View for user login
 def login_user(request):
@@ -111,13 +112,44 @@ def service_view(response, title):
 @login_required
 def customer_dashboard(request):
     """Renders the customer dashboard."""
+    user = request.user
+    bookings = Booking.objects.filter(user=user)
+
+    # Active = pending or confirmed
+    active_bookings_count = bookings.filter(status__in=['pending', 'confirmed']).count()
+
+    # Completed services
+    completed_services_count = bookings.filter(status='completed').count()
+
+    # Total spent on completed bookings (you can customize this logic)
+    total_spent = 0
+    for booking in bookings.filter(status='completed'):
+        if hasattr(booking, 'price'):
+            total_spent += booking.price
+        else:
+            if booking.service_type == 'mini':
+                total_spent += 29.99
+            elif booking.service_type == 'full':
+                total_spent += 59.99
+            else:
+                total_spent += 99.99
+
+    # Loyalty points: 1 point per $10 spent (example)
+    loyalty_points = int(total_spent // 10)
+
+    # Upcoming = future + pending or confirmed
+    upcoming_bookings = bookings.filter(
+        status__in=['pending', 'confirmed'],
+        date__gte=timezone.now().date()
+    ).order_by('date', 'time')[:5]
+
     context = {
-        'user': request.user,
-        'active_bookings_count': 0,  # Add logic to calculate
-        'completed_services_count': 0,  # Add logic to calculate
-        'total_spent': 0.00,  # Add logic to calculate
-        'loyalty_points': 0,  # Add logic to calculate
-        'upcoming_bookings': []  # Add logic to calculate
+        'user': user,
+        'active_bookings_count': active_bookings_count,
+        'completed_services_count': completed_services_count,
+        'total_spent': round(total_spent, 2),
+        'loyalty_points': loyalty_points,
+        'upcoming_bookings': upcoming_bookings,
     }
     return render(request, 'dashboard/customer_dashboard.html', context)
 
