@@ -38,6 +38,7 @@ urlpatterns = [
     path('validate-password/', views.password_view, name='password_view'),  # Password validation route
     path('service-view/<str:title>', views.service_view, name='service_view'), # Service page from service provider
     path('dashboard/', views.customer_dashboard, name='customer_dashboard'),
+    path('dashboard/p', views.provider_dashboard, name='provider_dashboard'),
     path('dashboard/booking/', views.booking_view, name='booking'),
     path('dashboard/history/', views.history_view, name='history'),
     path('dashboard/history/rebook/<int:booking_id>/', views.rebook_service, name='rebook_service'),

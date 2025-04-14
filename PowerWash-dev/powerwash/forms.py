@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 class CustomUserCreationForm(UserCreationForm):
+    #account_type = forms.ChoiceField(widget=forms.TextInput, choices=['provider', 'customer'])
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': 'Enter your first name',
         'class': 'form-control'

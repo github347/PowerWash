@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -23,7 +25,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Login successful')
-            return redirect('customer_dashboard')  # Redirect to dashboard after login
+            return redirect('customer_dashboard') # Redirect to dashboard after login
         else:
             messages.error(request, 'Login failed. Please try again.')
     return render(request, 'registration/login.html', {})
@@ -339,3 +341,7 @@ def update_profile_image(request):
         })
     else:
         return JsonResponse({'status': 'error'}, status=400)
+
+@login_required
+def provider_dashboard(request):
+    return render(request, 'dashboard/provider_dashboard.html')

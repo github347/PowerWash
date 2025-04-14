@@ -505,7 +505,8 @@
 
                 <form method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="account_type" id="account_type" value="customer">
+                    <!-- TODO: Need to add account_type input to the backend -->
+                    <input type="hidden" name="account_type" id="account_type" value='customer'>
 
                     <div class="account-type">
                         <div class="account-type-option selected" id="customer-option" data-type="customer">
