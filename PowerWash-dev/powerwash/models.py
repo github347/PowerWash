@@ -4,12 +4,17 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 class Profile(models.Model):
+    ACCOUNT_TYPE_CHOICES = [
+        ('provider', 'Service Provider'),
+        ('customer', 'Customer'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     postal_code = models.CharField(max_length=10, blank=True, null=True)
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES, default='customer')
 
     def __str__(self):
         return self.user.username
@@ -26,21 +31,36 @@ class UserSettings(models.Model):
     def __str__(self):
         return f"Settings for {self.user.username}"
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    print("create_user_profile called")
-    if created:
-        print("user created, creating profile")
-        Profile.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     print("create_user_profile called")
+#     if created:
+#         print("user created, creating profile")
+#         Profile.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     print("save_user_profile called")
+#     try:
+#         instance.profile.save()
+#     except Profile.DoesNotExist:
+#         print("Profile does not exist, creating profile")
+#         Profile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    print("save_user_profile called")
-    try:
-        instance.profile.save()
-    except Profile.DoesNotExist:
-        print("Profile does not exist, creating profile")
+def manage_user_profile(sender, instance, created, **kwargs):
+    print("manage_user_profile called")
+    if created:
+        print("User created, creating profile")
         Profile.objects.create(user=instance)
+    else:
+        try:
+            print("User updated, saving profile")
+            instance.profile.save()
+        except Profile.DoesNotExist:
+            print("Profile does not exist, creating profile")
+            Profile.objects.create(user=instance)
+
 
 class ServicePage(models.Model):
     title = models.CharField(max_length=120)

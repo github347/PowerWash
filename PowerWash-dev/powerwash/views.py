@@ -14,6 +14,7 @@ from django.core.files.base import ContentFile
 import os
 from .models import UserSettings
 from django.utils import timezone
+from django.db import IntegrityError
 
 # View for user login
 def login_user(request):
@@ -25,29 +26,45 @@ def login_user(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Login successful')
-            return redirect('customer_dashboard') # Redirect to dashboard after login
+            account_type = user.profile.account_type if hasattr(user, 'profile') else 'customer'
+            if account_type == 'provider':
+                return redirect('provider_dashboard')
+            else:
+                return redirect('customer_dashboard') # Redirect to dashboard after login
         else:
             messages.error(request, 'Login failed. Please try again.')
     return render(request, 'registration/login.html', {})
 
-# View for user registration
+
 def register_user(request):
     """Handles user registration."""
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
+        account_type = request.POST.get('account_type', 'customer')  # Default to 'customer'
         if form.is_valid():
-            user = form.save()
+            user = form.save()  # Save the user
+            # No need to manually create the profile, signals will handle it
+            profile = Profile.objects.get(user=user)  # Access the profile after creation
+            profile.account_type = account_type  # Update the account_type
+            profile.save()  # Save the profile with the updated account_type
+
             username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password2')  # Corrected to password2
+            password = form.cleaned_data.get('password2')
             user = authenticate(request, username=username, password=password)
             login(request, user)
-            messages.success(request, 'Registration successful')
+            messages.success(request, f'Registration successful as {account_type}')
+            if account_type == 'provider':
+                return redirect('provider_dashboard')
+            else:
+                return redirect('customer_dashboard')
             return redirect('home')
         else:
             messages.error(request, 'Registration failed. Please try again.')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
 
 # View for the home page
 def home(request):

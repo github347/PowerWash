@@ -507,6 +507,7 @@
                     {% csrf_token %}
                     <!-- TODO: Need to add account_type input to the backend -->
                     <input type="hidden" name="account_type" id="account_type" value='customer'>
+                    
 
                     <div class="account-type">
                         <div class="account-type-option selected" id="customer-option" data-type="customer">
@@ -665,12 +666,21 @@
         }
 
         // Add click listeners to account type options
+        // document.querySelectorAll('.account-type-option').forEach(option => {
+        //     option.addEventListener('click', (e) => {
+        //         const type = e.currentTarget.dataset.type;
+        //         selectAccountType(type);
+        //     });
+        // });
+
         document.querySelectorAll('.account-type-option').forEach(option => {
-            option.addEventListener('click', (e) => {
-                const type = e.currentTarget.dataset.type;
-                selectAccountType(type);
+        option.addEventListener('click', function () {
+        document.getElementById('account_type').value = this.dataset.type;
+        document.querySelectorAll('.account-type-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
             });
         });
+
     </script>
 
     <script>
