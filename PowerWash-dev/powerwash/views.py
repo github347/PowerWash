@@ -367,6 +367,8 @@ def provider_dashboard(request):
     # service_page = ServicePage.objects.filter(user=user)
     # services = service_page.service_set.all()
 
-
-
     return render(request, 'dashboard/provider_dashboard.html')
+
+def create_service(request):
+
+    return render(request, 'dashboard/create_service.html')

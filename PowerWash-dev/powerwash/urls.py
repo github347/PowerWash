@@ -46,6 +46,7 @@ urlpatterns = [
     path('dashboard/profile/', views.profile_view, name='profile'),
     path('dashboard/settings/', views.settings_view, name='settings'),
     path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
+    path('dashboard/create-service/', views.create_service, name='create_service')
 ]
 
 if settings.DEBUG:

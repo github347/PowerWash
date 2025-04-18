@@ -156,3 +156,8 @@ class UserPasswordChangeForm(forms.Form):
             raise forms.ValidationError("The new passwords do not match.")
         
         return confirm_password
+
+class CreateServicesForm(forms.Form):
+    name = forms.CharField(label='Service Name', max_length=100)
+    description = forms.CharField(label='Service Description', max_length=100)
+    price = forms.DecimalField(label='Service Price', max_digits=10, decimal_places=2)
