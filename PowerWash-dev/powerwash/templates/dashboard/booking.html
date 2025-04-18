@@ -504,6 +504,24 @@
 
                 <h2 class="mb-4">Choose Your Service</h2>
                 <div class="service-options">
+
+                    {% for i in services %}
+                        <div class="service-option" onclick="selectService(this, 'mini')">
+                        <h3>{{ i.name }}</h3>
+                        <h4>By {{ i.page.title }}</h4>
+                        <div class="service-price">{{ i.price }}</div>
+                        <div>{{ i.description }}</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Exterior Wash</li>
+                            <li><i class="fas fa-check"></i> Interior Vacuum</li>
+                            <li><i class="fas fa-check"></i> Window Cleaning</li>
+                            <li><i class="fas fa-check"></i> Tire Dressing</li>
+                        </ul>
+                        <input type="radio" name="service_type" value="mini" class="d-none">
+                    </div>
+                    {% endfor %}
+
+
                     <div class="service-option" onclick="selectService(this, 'mini')">
                         <h3>Mini Valet</h3>
                         <div class="service-price">29.99</div>

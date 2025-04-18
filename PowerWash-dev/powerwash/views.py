@@ -138,6 +138,10 @@ def service_view(response, title):
 def customer_dashboard(request):
     """Renders the customer dashboard."""
     user = request.user
+
+
+
+
     bookings = Booking.objects.filter(user=user)
 
     # Active = pending or confirmed
@@ -182,7 +186,12 @@ def customer_dashboard(request):
 @login_required
 def booking_view(request):
     """Handles booking a service."""
+    services = Service.objects.all()
+
     if request.method == 'POST':
+
+
+
         try:
             booking = Booking(
                 user=request.user,
@@ -197,7 +206,7 @@ def booking_view(request):
             return redirect('customer_dashboard')
         except Exception as e:
             messages.error(request, f'Error creating booking: {str(e)}')
-    return render(request, 'dashboard/booking.html')
+    return render(request, 'dashboard/booking.html', {'services': services})
 
 # View for booking history (requires login)
 @login_required
