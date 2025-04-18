@@ -334,9 +334,14 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="dashboard-header">
+            Create Service
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit", name="save">Create Service</button>
+                </form>
 
-            </div>
+
         </main>
     </div>
 

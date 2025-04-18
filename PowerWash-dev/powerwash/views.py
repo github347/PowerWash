@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import ServicePage, Service, Booking  # Import your models
 from django.contrib.auth import authenticate, login  # Import authentication functions
-from .forms import CustomUserCreationForm, PasswordForm, SignInForm  # Import your forms
+from .forms import CustomUserCreationForm, PasswordForm, SignInForm, CreateServicesForm  # Import your forms
 from django.http import JsonResponse
 from .models import Profile
 from django.core.files.storage import default_storage
@@ -54,6 +54,11 @@ def register_user(request):
             login(request, user)
             messages.success(request, f'Registration successful as {account_type}')
             if account_type == 'provider':
+                sp = ServicePage.objects.create(profile=profile, title="Services", description="This is a Services Page")
+                #profile.servicepage_set.create(title="Services", description="This is a Services Page")
+
+                sp.save()
+
                 return redirect('provider_dashboard')
             else:
                 return redirect('customer_dashboard')
@@ -364,11 +369,32 @@ def update_profile_image(request):
 def provider_dashboard(request):
 
     # user = request.user
-    # service_page = ServicePage.objects.filter(user=user)
+    # profile = Profile.objects.filter(user=user)
+    # service_page = ServicePage.objects.filter(profile=profile)
     # services = service_page.service_set.all()
 
     return render(request, 'dashboard/provider_dashboard.html')
 
 def create_service(request):
 
-    return render(request, 'dashboard/create_service.html')
+    user = request.user
+    profile = Profile.objects.filter(user=user)
+    service_page = ServicePage.objects.all()[:1]
+    #service_page = ServicePage.objects.filter()
+    # profile.servicepage_set.get(id=1)
+    if request.method == 'POST':
+        form = CreateServicesForm(request.POST)
+
+        if form.is_valid():
+            n = form.cleaned_data['name']
+            p = form.cleaned_data['price']
+            d = form.cleaned_data['description']
+            service = Service(page=service_page[0], name=n, price=p, description=d)
+            service.save()
+
+
+    else:
+        form = CreateServicesForm()
+
+
+    return render(request, 'dashboard/create_service.html', {'form': form})

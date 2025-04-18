@@ -63,9 +63,9 @@ def manage_user_profile(sender, instance, created, **kwargs):
 
 
 class ServicePage(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=120)
-    content = models.TextField()
+    description = models.TextField()
 
     def __str__(self):
         return self.title
@@ -73,8 +73,8 @@ class ServicePage(models.Model):
 class Service(models.Model):
     page = models.ForeignKey(ServicePage, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
-    price = models.DecimalField(decimal_places=2, max_digits=20)
-    description = models.TextField(max_length=500)
+    price = models.DecimalField(decimal_places=2, max_digits=20, default=0)
+    description = models.TextField(max_length=500, default='this is a service from me to you')
     complete = models.BooleanField(default=False)
 
     def __str__(self):
