@@ -463,6 +463,38 @@
                 flex-wrap: wrap;
             }
         }
+
+        .booking-actions {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .book-again {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .book-again:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
+        .book-again i {
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -566,7 +598,7 @@
                     {% for booking in bookings %}
                     <div class="booking-history-card" data-status="{{ booking.status }}">
                         <div class="booking-header">
-                            <h3>{{ booking.service_type }}</h3>
+                            <h3>{{ booking.get_service_type_display }}</h3>
                             <span class="status-badge status-{{ booking.status|lower }}">
                                 <i class="fas fa-{% if booking.status == 'completed' %}check-circle{% elif booking.status == 'pending' %}clock{% else %}times-circle{% endif %}"></i>
                                 {{ booking.status }}
@@ -582,8 +614,25 @@
                                 <span>{{ booking.time }}</span>
                             </div>
                             <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>
+                                    {% if booking.location == 'miami' %}Miami - 1250 Ocean Drive, Miami Beach, FL 33139
+                                    {% elif booking.location == 'orlando' %}Orlando - 8955 International Drive, Orlando, FL 32819
+                                    {% elif booking.location == 'tampa' %}Tampa - 615 Channelside Drive, Tampa, FL 33602
+                                    {% elif booking.location == 'jacksonville' %}Jacksonville - 2 Independent Drive, Jacksonville, FL 32202
+                                    {% elif booking.location == 'tallahassee' %}Tallahassee - 200 S Adams St, Tallahassee, FL 32301
+                                    {% elif booking.location == 'gainesville' %}Gainesville - 3600 SW Archer Rd, Gainesville, FL 32608
+                                    {% elif booking.location == 'pensacola' %}Pensacola - 400 Pensacola Beach Blvd, Gulf Breeze, FL 32561
+                                    {% elif booking.location == 'fortlauderdale' %}Fort Lauderdale - 1100 Seabreeze Blvd, Fort Lauderdale, FL 33316
+                                    {% elif booking.location == 'daytona' %}Daytona Beach - 1200 Main St, Daytona Beach, FL 32118
+                                    {% elif booking.location == 'keywest' %}Key West - 400 Front Street, Key West, FL 33040
+                                    {% elif booking.location == 'naples' %}Naples - 955 5th Avenue South, Naples, FL 34102
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="info-item">
                                 <i class="fas fa-car"></i>
-                                <span>{{ booking.vehicle_type }}</span>
+                                <span>{{ booking.vehicle_type|title }}</span>
                             </div>
                             <div class="info-item">
                                 <i class="fas fa-tag"></i>
@@ -601,9 +650,14 @@
                                 <i class="fas fa-star"></i> Leave Review
                             </button>
                             {% endif %}
-                            <button class="action-btn btn-rebook" onclick="rebookService('{{ booking.id }}')">
-                                <i class="fas fa-redo"></i> Book Again
+                            {% if booking.status == 'pending' %}
+                            <button class="action-btn btn-cancel" onclick="cancelBooking('{{ booking.id }}')">
+                                <i class="fas fa-times"></i> Cancel Booking
                             </button>
+                            {% endif %}
+                            <a href="{% url 'booking' %}" class="book-again">
+                                <i class="fas fa-calendar-plus"></i> Book Again
+                            </a>
                         </div>
                     </div>
                     {% endfor %}
@@ -631,15 +685,6 @@
                         <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
-                    </ul>
                 </div>
                 <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Support</h3>
@@ -691,6 +736,12 @@
 
         function rebookService(bookingId) {
             window.location.href = `/dashboard/history/rebook/${bookingId}/`;
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                window.location.href = `/dashboard/history/cancel/${bookingId}/`;
+            }
         }
 
         function updateTime() {

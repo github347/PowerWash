@@ -22,6 +22,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from . import views
 from powerwash.views import sign_in_view, login_view  # Import the login view
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,10 +38,16 @@ urlpatterns = [
     path('validate-password/', views.password_view, name='password_view'),  # Password validation route
     path('service-view/<str:title>', views.service_view, name='service_view'), # Service page from service provider
     path('dashboard/', views.customer_dashboard, name='customer_dashboard'),
+    path('dashboard/p', views.provider_dashboard, name='provider_dashboard'),
     path('dashboard/booking/', views.booking_view, name='booking'),
     path('dashboard/history/', views.history_view, name='history'),
     path('dashboard/history/rebook/<int:booking_id>/', views.rebook_service, name='rebook_service'),
     path('dashboard/history/review/<int:booking_id>/', views.leave_review, name='leave_review'),
+    path('dashboard/history/cancel/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
     path('dashboard/profile/', views.profile_view, name='profile'),
     path('dashboard/settings/', views.settings_view, name='settings'),
+    path('update-profile-image/', views.update_profile_image, name='update_profile_image'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

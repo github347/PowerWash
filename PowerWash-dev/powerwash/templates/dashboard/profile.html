@@ -165,7 +165,6 @@
             opacity: 0.1;
         }
 
-
         .profile-avatar {
             width: 150px;
             height: 150px;
@@ -181,6 +180,13 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }        
 
         .avatar-upload {
             position: absolute;
@@ -491,6 +497,55 @@
                 padding: 1.5rem;
             }
         }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section h3 i {
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+            outline: none;
+        }
+
+        .form-text {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 
@@ -550,23 +605,31 @@
             </nav>
         </aside>
 
+        <!-- Profile Image Section -->
         <main class="main-content">
             <div class="profile-header">
                 <div class="profile-avatar">
-                    {% if user.profile_image %}
-                    <img src="{{ user.profile_image.url }}" alt="Profile Image">
+                    {% if user.profile.profile_image %}
+                        <img src="{{ user.profile.profile_image.url }}?{% now 'U' %}" alt="Profile Image">
                     {% else %}
-                    <i class="fas fa-user"></i>
+                        <i class="fas fa-user"></i>
                     {% endif %}
+                
+                    <!-- Camera icon triggers file selection -->
                     <div class="avatar-upload" title="Upload new photo">
                         <i class="fas fa-camera"></i>
                     </div>
                 </div>
+
+                <!-- Hidden file input and CSRF outside profile-avatar -->
+                <input type="file" name="profile_image" id="profile_image" style="display: none;" />
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
                 <div class="profile-info">
                     <h1>{{ user.get_full_name }}</h1>
                     <p>Member since {{ user.date_joined|date:"F Y" }}</p>
                 </div>
-            </div>
+            </div>       
 
             <div class="profile-sections">
                 <div class="profile-form">
@@ -582,7 +645,7 @@
                                             value="{{ user.first_name }}">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="cl-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Last Name</label>
                                         <input type="text" class="form-control" name="last_name"
@@ -596,7 +659,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" name="phone" value="{{ user.profile.phone }}">
+                                <input type="tel" class="form-control" name="phone" value="{{ user.profile.phone|default:'' }}">
                             </div>
                         </div>
 
@@ -604,24 +667,45 @@
                             <h3><i class="fas fa-map-marker-alt"></i> Address Information</h3>
                             <div class="form-group">
                                 <label class="form-label">Street Address</label>
-                                <input type="text" class="form-control" name="address"
-                                    value="{{ user.profile.address }}">
+                                <input type="text" class="form-control" name="address" value="{{ user.profile.address|default:'' }}">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">City</label>
-                                        <input type="text" class="form-control" name="city"
-                                            value="{{ user.profile.city }}">
+                                        <input type="text" class="form-control" name="city" value="{{ user.profile.city|default:'' }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label">Postal Code</label>
-                                        <input type="text" class="form-control" name="postal_code"
-                                            value="{{ user.profile.postal_code }}">
+                                        <input type="text" class="form-control" name="postal_code" value="{{ user.profile.postal_code|default:'' }}">
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-map-marker-alt"></i> Location Preferences</h3>
+                            <div class="form-group">
+                                <label class="form-label">Preferred Location</label>
+                                <select class="form-control" name="preferred_location">
+                                    <option value="">Select your preferred location</option>
+                                    <option value="miami" {% if profile.preferred_location == 'miami' %}selected{% endif %}>Miami</option>
+                                    <option value="orlando" {% if profile.preferred_location == 'orlando' %}selected{% endif %}>Orlando</option>
+                                    <option value="tampa" {% if profile.preferred_location == 'tampa' %}selected{% endif %}>Tampa</option>
+                                    <option value="jacksonville" {% if profile.preferred_location == 'jacksonville' %}selected{% endif %}>Jacksonville</option>
+                                    <option value="tallahassee" {% if profile.preferred_location == 'tallahassee' %}selected{% endif %}>Tallahassee</option>
+                                    <option value="gainesville" {% if profile.preferred_location == 'gainesville' %}selected{% endif %}>Gainesville</option>
+                                    <option value="pensacola" {% if profile.preferred_location == 'pensacola' %}selected{% endif %}>Pensacola</option>
+                                    <option value="fortlauderdale" {% if profile.preferred_location == 'fortlauderdale' %}selected{% endif %}>Fort Lauderdale</option>
+                                    <option value="daytona" {% if profile.preferred_location == 'daytona' %}selected{% endif %}>Daytona Beach</option>
+                                    <option value="keywest" {% if profile.preferred_location == 'keywest' %}selected{% endif %}>Key West</option>
+                                    <option value="naples" {% if profile.preferred_location == 'naples' %}selected{% endif %}>Naples</option>
+                                </select>
+                            </div>
+                            <div class="form-text text-muted">
+                                <small>This location will be pre-selected when making new bookings</small>
                             </div>
                         </div>
 
@@ -679,15 +763,6 @@
                     </div>
                 </div>
                 <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Support</h3>
                     <ul class="footer-links">
                         <li><i class="fas fa-question-circle"></i><a href="/faq.html">FAQ</a></li>
@@ -717,33 +792,42 @@
     <script>
         // Handle profile image upload
         document.querySelector('.avatar-upload').addEventListener('click', function () {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function (event) {
-                const file = event.target.files[0];
-                if (file) {
-                    // Handle file upload
-                    const formData = new FormData();
-                    formData.append('profile_image', file);
+            const input = document.getElementById('profile_image');  // Use existing file input
+            input.click();  // Trigger file input click
+        });
 
-                    fetch('/update-profile-image/', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                        }
-                    }).then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                window.location.reload();
-                            }
-                        });
-                }
-            };
-            input.click();
+        document.getElementById('profile_image').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('profile_image', file);
+
+                fetch('/update-profile-image/', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Update profile image on success
+                        // Assuming the response contains the updated image URL
+                        const newImageUrl = data.image_url + "?t=" + new Date().getTime();  // Adding a timestamp to avoid caching
+                        document.querySelector('.profile-avatar img').src = newImageUrl;
+
+                        // Clear the file input to prevent dialog re-opening
+                        document.getElementById('profile_image').value = '';
+                    } else {
+                        alert("Image upload failed!");
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
         });
     </script>
+
 </body>
 
 </html>

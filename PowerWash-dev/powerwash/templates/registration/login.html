@@ -18,6 +18,13 @@
             --text-color: #333333;
             --error-color: #ef4444;
             --font-family: 'Poppins', sans-serif;
+            --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         body {
@@ -88,29 +95,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(0, 110, 255, 0.4), rgba(0, 168, 232, 0.3));
-            padding: 6rem 2rem 4rem;
-            padding-top: 80px;
-            margin: 0;
-            border: none;
+            background: linear-gradient(-45deg, rgba(0, 110, 255, 0.4), rgba(0, 168, 232, 0.3));
+            padding: 2rem;
         }
 
         .login-container {
             display: flex;
-            width: 1200px;
+            width: 1000px;
             max-width: 100%;
             background: var(--white);
             border-radius: 20px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            margin: 0 auto;
-            min-height: 600px;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.25);
         }
 
         .login-image {
             flex: 1;
-            background: linear-gradient(rgba(37, 100, 235, 0.592), rgba(30, 64, 175, 0.9)),
-            url('{% static "powerwash/images/floor.jpg" %}');
+            background: linear-gradient(rgba(37, 100, 235, 0.7), rgba(30, 64, 175, 0.8)),
+            url('{% static "images/carwash_login.jpg" %}');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -118,31 +125,27 @@
             justify-content: center;
             padding: 4rem;
             color: var(--white);
-            width: 45%;
+            display: none;
         }
 
         .login-form-container {
             flex: 1;
-            padding: 4rem;
-            width: 45%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 3rem;
-            width: 100%;
-
+            margin-bottom: 2.5rem;
         }
 
         .form-header h1 {
             font-weight: 600;
             color: #1e293b;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
 
         .form-header p {
@@ -151,25 +154,83 @@
             font-size: 1.1rem;
         }
 
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-        /* Form Input Styles */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #64748b;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .forgot-password:hover {
+            color: var(--secondary-color);
+        }
+
+        .forgot-password::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .forgot-password:hover::after {
+            width: 100%;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            animation: shake 0.4s ease-in-out;
+        }
+
         .input-group {
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             max-width: 340px;
-            margin-left: 2.2rem;
+            margin-left: 0;
             margin-right: auto;
         }
 
         .input-group input {
             width: 100%;
-            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 0.95rem;
             transition: all 0.3s ease;
             background-color: white;
             font-family: var(--font-family);
+            transform: scale(1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input-group input[type=number] {
@@ -201,11 +262,12 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
             outline: none;
+            transform: scale(1.02);
         }
 
         .input-group i {
             position: absolute;
-            left: 1rem;
+            left: 0.75rem;
             font-size: 1rem;
             top: 50%;
             transform: translateY(-50%);
@@ -219,7 +281,7 @@
             background: var(--primary-color);
             color: var(--white);
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 1.1rem;
             font-weight: 500;
             cursor: pointer;
@@ -230,16 +292,42 @@
             gap: 0.5rem;
             margin: 2rem auto;
             height: 3rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .login-button:hover {
             background: var(--secondary-color);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .login-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .login-button:active {
+            transform: scale(0.98);
         }
 
         .register-link {
             text-align: center;
             margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
             color: #64748b;
             width: 100%;
             font-size: 1rem;
@@ -251,10 +339,27 @@
             font-weight: 600;
             text-decoration: none;
             transition: color 0.3s ease;
+            position: relative;
         }
 
         .register-link a:hover {
             color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .register-link a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .register-link a:hover::after {
+            width: 100%;
         }
 
         .benefits-list {
@@ -270,6 +375,14 @@
             margin-bottom: 1.25rem;
             font-size: 1.1rem;
             color: #ffffff;
+            opacity: 0.9;
+            transform: translateX(0);
+            transition: all 0.3s ease;
+        }
+
+        .benefits-list li:hover {
+            opacity: 1;
+            transform: translateX(10px);
         }
 
         .benefits-list li i {
@@ -379,12 +492,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .social-icon:hover {
             color: var(--accent-color);
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-3px);
+            transform: translateY(-5px) rotate(8deg);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .footer-bottom {
@@ -401,6 +523,12 @@
             .login-form-container {
                 width: 100%;
                 padding: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .login-image {
+                display: block;
             }
         }
     </style>
@@ -425,45 +553,56 @@
             <!-- Left side with image -->
             <div class="login-image">
                 <h2 style="font-size: 2rem; margin-bottom: 1rem;">Welcome Back!</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Log in to access your account and manage your car
-                    care services.</p>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Experience Florida's Premier Car Wash Service</p>
                 <ul class="benefits-list">
-                    <li><i class="fas fa-history"></i> View booking history</li>
-                    <li><i class="fas fa-calendar-check"></i> Manage appointments</li>
-                    <li><i class="fas fa-percent"></i> Access special offers</li>
-                    <li><i class="fas fa-star"></i> Rate your experiences</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 11 Convenient Locations</li>
+                    <li><i class="fas fa-star"></i> Premium Service Quality</li>
+                    <li><i class="fas fa-shield-alt"></i> Secure Booking System</li>
+                    <li><i class="fas fa-clock"></i> Flexible Scheduling</li>
+                    <li><i class="fas fa-hand-holding-usd"></i> Competitive Pricing</li>
                 </ul>
             </div>
 
             <!-- Right side with form -->
             <div class="login-form-container">
                 <div class="form-header">
-                    <h1>Welcome Back</h1>
-                    <p>Please login to your account</p>
+                    <h1>Sign In</h1>
+                    <p>Enter your credentials to continue</p>
                 </div>
 
-                <form method="post" style="width: 100%;">
+                <form method="POST" class="login-form">
                     {% csrf_token %}
-            
                     <div class="input-group">
                         <i class="fas fa-user"></i>
-                        <label for="id_username">Username</label>
-                        <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required>
-                    </div>
-            
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <label for="id_password">Password</label>
-                        <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
+                        <input type="text" name="username" placeholder="Username" required>
                     </div>
 
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    {% if error_message %}
+                    <div class="error-message">
+                        {{ error_message }}
+                    </div>
+                    {% endif %}
+
                     <button type="submit" class="login-button">
-                        Login
+                        Sign In
                         <i class="fas fa-sign-in-alt"></i>
                     </button>
 
                     <div class="register-link">
-                        Don't have an account? <a href="{% url 'register' %}">Sign up</a>
+                        Don't have an account? <a href="{% url 'register' %}">Create one</a>
                     </div>
                 </form>
             </div>
@@ -483,15 +622,6 @@
                         <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
-                    </ul>
                 </div>
                 <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Support</h3>

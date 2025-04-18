@@ -498,101 +498,116 @@
             </nav>
         </aside>
 
+        <!-- Delete form (separate from settings form) -->
+        <form method="POST" id="deleteForm">
+            {% csrf_token %}
+            <input type="hidden" name="delete_account" value="1">
+        </form>
+
         <main class="main-content">
             <div class="settings-header">
                 <h1>Settings</h1>
                 <p>Manage your account preferences and settings</p>
             </div>
 
-            <div class="settings-section">
-                <h2><i class="fas fa-bell"></i> Notifications</h2>
-                <div class="settings-option">
-                    <div class="option-label">
-                        <span class="option-title">Email Notifications</span>
-                        <span class="option-description">Receive booking confirmations and updates</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="settings-option">
-                    <div class="option-label">
-                        <span class="option-title">SMS Notifications</span>
-                        <span class="option-description">Get text messages for important updates</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                <div class="settings-option">
-                    <div class="option-label">
-                        <span class="option-title">Marketing Communications</span>
-                        <span class="option-description">Receive special offers and promotions</span>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
+            <form method="POST">
+                {% csrf_token %}
 
-            <div class="settings-section">
-                <h2><i class="fas fa-shield-alt"></i> Privacy and Security</h2>
-                <div class="form-group">
-                    <label class="form-label">Two-Factor Authentication</label>
+                <!-- Notifications -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-bell"></i> Notifications</h2>
                     <div class="settings-option">
                         <div class="option-label">
-                            <span class="option-title">Enable 2FA</span>
-                            <span class="option-description">Add an extra layer of security to your account</span>
+                            <span class="option-title">Email Notifications</span>
+                            <span class="option-description">Receive booking confirmations and updates</span>
                         </div>
                         <label class="toggle-switch">
-                            <input type="checkbox">
+                            <input type="checkbox" name="email_notifications" {% if user_settings.email_notifications %}checked{% endif %}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-option">
+                        <div class="option-label">
+                            <span class="option-title">SMS Notifications</span>
+                            <span class="option-description">Get text messages for important updates</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="sms_notifications" {% if user_settings.sms_notifications %}checked{% endif %}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-option">
+                        <div class="option-label">
+                            <span class="option-title">Marketing Communications</span>
+                            <span class="option-description">Receive special offers and promotions</span>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="marketing_comm" {% if user_settings.marketing_comm %}checked{% endif %}>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                 </div>
-            </div>
 
-            <div class="settings-section">
-                <h2><i class="fas fa-language"></i> Language and Region</h2>
-                <div class="form-group">
-                    <label class="form-label">Language</label>
-                    <select class="form-control">
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                        <option value="fr">Français</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Time Zone</label>
-                    <select class="form-control">
-                        <option value="UTC">UTC (GMT+0)</option>
-                        <option value="EST">Eastern Time (GMT-5)</option>
-                        <option value="PST">Pacific Time (GMT-8)</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="settings-section danger-zone">
-                <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
-                <div class="settings-option">
-                    <div class="option-label">
-                        <span class="option-title">Delete Account</span>
-                        <span class="option-description">Permanently delete your account and all data</span>
+                <!-- Privacy and Security -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-shield-alt"></i> Privacy and Security</h2>
+                    <div class="form-group">
+                        <label class="form-label">Two-Factor Authentication</label>
+                        <div class="settings-option">
+                            <div class="option-label">
+                                <span class="option-title">Enable 2FA</span>
+                                <span class="option-description">Add an extra layer of security to your account</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="enable_2fa" {% if user_settings.enable_2fa %}checked{% endif %}>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </div>
-                    <button class="danger-button">
-                        <i class="fas fa-trash-alt"></i>
-                        Delete Account
-                    </button>
                 </div>
-            </div>
 
-            <button type="submit" class="save-button">
-                <i class="fas fa-save"></i>
-                Save Changes
-            </button>
+                <!-- Language and Region -->
+                <div class="settings-section">
+                    <h2><i class="fas fa-language"></i> Language and Region</h2>
+                    <div class="form-group">
+                        <label class="form-label">Language</label>
+                        <select class="form-control" name="language">
+                            <option value="en" {% if user_settings.language == 'en' %}selected{% endif %}>English</option>
+                            <option value="es" {% if user_settings.language == 'es' %}selected{% endif %}>Español</option>
+                            <option value="fr" {% if user_settings.language == 'fr' %}selected{% endif %}>Français</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time Zone</label>
+                        <select class="form-control" name="time_zone">
+                            <option value="UTC" {% if user_settings.time_zone == 'UTC' %}selected{% endif %}>UTC (GMT+0)</option>
+                            <option value="EST" {% if user_settings.time_zone == 'EST' %}selected{% endif %}>Eastern Time (GMT-5)</option>
+                            <option value="PST" {% if user_settings.time_zone == 'PST' %}selected{% endif %}>Pacific Time (GMT-8)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section danger-zone">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+                    <div class="settings-option">
+                        <div class="option-label">
+                            <span class="option-title">Delete Account</span>
+                            <span class="option-description">Permanently delete your account and all data</span>
+                        </div>
+                        <button type="button" id="deleteButton" class="danger-button">
+                            <i class="fas fa-trash-alt"></i>
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <button type="submit" class="save-button">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+            </form>
         </main>
     </div>
 
@@ -608,15 +623,6 @@
                         <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
-                    </ul>
                 </div>
                 <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Support</h3>
@@ -646,20 +652,46 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Handle form submission
-        document.querySelector('form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            // Add your save settings logic here
-            alert('Settings saved successfully!');
-        });
-
         // Handle delete account
-        document.querySelector('.danger-button').addEventListener('click', function () {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                // Add your delete account logic here
+        document.querySelector('.danger-button').addEventListener('click', function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Show the confirmation dialog
+            const isConfirmed = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+
+            // Only proceed if the user confirms
+            if (isConfirmed) {
+                // Create a hidden form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = ''; // Submits to the current URL
+
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // CSRF token input
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+
+                // Hidden input to trigger delete logic
+                const deleteInput = document.createElement('input');
+                deleteInput.type = 'hidden';
+                deleteInput.name = 'delete_account';
+                deleteInput.value = '1';
+                form.appendChild(deleteInput);
+
+                // Append the form to the document and submit it
+                document.body.appendChild(form);
+                form.submit();
             }
+            // If the user cancels, no action is taken (form is not created)
         });
     </script>
+
+        {% csrf_token %}
 </body>
 
 </html>

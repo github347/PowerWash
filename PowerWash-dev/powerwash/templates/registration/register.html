@@ -115,11 +115,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(0, 110, 255, 0.4), rgba(0, 168, 232, 0.3));
-            padding: 4rem 2rem;
-            margin-bottom: 0;
-            margin: 0;
-            border: none;
+            background: linear-gradient(-45deg, rgba(0, 110, 255, 0.4), rgba(0, 168, 232, 0.3), rgba(0, 140, 255, 0.4), rgba(0, 190, 232, 0.3));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 2rem;
         }
 
         .register-container {
@@ -138,8 +137,8 @@
 
         .register-image {
             flex: 1;
-            background: linear-gradient(rgba(37, 100, 235, 0.592), rgba(30, 64, 175, 0.9)),
-            url('{% static "powerwash\images\Power.jpg" %}');
+            background: linear-gradient(rgba(37, 100, 235, 0.7), rgba(30, 64, 175, 0.8)),
+            url('{% static "powerwash/images/carwash_register.jpg" %}');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -152,15 +151,16 @@
 
         .register-form-container {
             flex: 1;
-            padding: 4rem 3.5rem;
-            width: 45%;
-            max-width: none;
+            padding: 2rem 3rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
             border-left: 1px solid #f1f5f9;
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2.5rem;
         }
 
         .form-header h1 {
@@ -168,7 +168,7 @@
             font-weight: 600;
             color: #1e293b;
             font-size: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .form-header p {
@@ -180,21 +180,26 @@
         /* Form Input Styles */
         .input-group {
             position: relative;
-            margin-bottom: 2rem;
-            max-width: 340px;
-            margin-left: 2.2rem;
+            margin-bottom: 1.75rem;
+            margin-top: 1rem;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
             margin-right: auto;
         }
 
         .input-group input {
             width: 100%;
-            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 0.95rem;
+            box-sizing: border-box;
             transition: all 0.3s ease;
-            background-color: white;
+            background-color: #f8fafc;
             font-family: var(--font-family);
+            transform: scale(1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input-group input[type=number] {
@@ -211,28 +216,26 @@
         }
 
         .input-group label {
-            position: absolute;
-            left: 3rem;
-            top: -0.75rem;
-            background: white;
-            padding: 0 0.75rem;
-            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            font-family: var(--font-family);
-            color: #64748b;
+            color: #475569;
         }
 
         .input-group input:focus {
+            transform: scale(1.02);
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
             outline: none;
         }
 
         .input-group i {
             position: absolute;
-            left: 1rem;
+            left: 0.75rem;
             font-size: 1rem;
-            top: 50%;
+            top: 2.25rem;
             transform: translateY(-50%);
             color: #94a3b8;
         }
@@ -273,9 +276,9 @@
             background: var(--primary-color);
             color: var(--white);
             border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
@@ -287,21 +290,46 @@
             max-width: 380px;
 
             margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .register-button:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .register-button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-1px);
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .register-button:active {
+            transform: scale(0.98);
         }
 
         .terms {
             max-width: 380px;
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             padding: 1rem;
             background-color: #f8fafc;
             border-radius: 8px;
             margin-left: auto;
             margin-right: auto;
+            font-size: 0.9rem;
         }
 
         .terms a {
@@ -309,9 +337,13 @@
             text-decoration: none;
         }
 
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
         .error-message {
             color: var(--error-color);
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             margin-top: 0.25rem;
         }
 
@@ -327,6 +359,9 @@
             gap: 0.75rem;
             margin-bottom: 1rem;
             font-size: 1.1rem;
+            opacity: 0.9;
+            transform: translateX(0);
+            transition: all 0.3s ease;
         }
 
         .benefits-list li i {
@@ -337,6 +372,11 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+        }
+
+        .benefits-list li:hover {
+            opacity: 1;
+            transform: translateX(10px);
         }
 
         @media (max-width: 768px) {
@@ -463,6 +503,114 @@
             padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .password-requirements {
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            padding-left: 2.75rem;
+        }
+
+        .requirement {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+        }
+
+        .requirement i {
+            font-size: 0.7rem;
+            width: 16px;
+            color: #cbd5e1;
+            transition: all 0.3s ease;
+        }
+
+        .requirement.valid i {
+            color: #22c55e;
+        }
+
+        .password-match {
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+            color: #64748b;
+            padding-left: 2.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .password-match i {
+            font-size: 0.7rem;
+            width: 16px;
+            color: #cbd5e1;
+        }
+
+        .password-match.valid i {
+            color: #22c55e;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-link a {
+            position: relative;
+        }
+
+        .login-link a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .login-link a:hover::after {
+            width: 100%;
+        }
+
+        .navbar-toggler {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-toggler {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+        }
     </style>
 </head>
 
@@ -472,6 +620,9 @@
             <a href="{% url 'home' %}" class="logo">
                 <i class="fas fa-car-wash"></i> PowerWash
             </a>
+            <button class="navbar-toggler">
+                <i class="fas fa-bars"></i>
+            </button>
             <ul class="nav-links">
                 <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
@@ -483,15 +634,14 @@
         <div class="register-container">
             <!-- Left side with image and benefits -->
             <div class="register-image">
-                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Join PowerWash Today!</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Create your account and start enjoying premium car
-                    cleaning services.</p>
+                <h2>Welcome to PowerWash</h2>
+                <p>Join our community and experience premium car care services.</p>
 
                 <ul class="benefits-list">
-                    <li><i class="fas fa-check"></i> Easy booking system</li>
-                    <li><i class="fas fa-shield-alt"></i> Secure payments</li>
-                    <li><i class="fas fa-award"></i> Quality guaranteed</li>
-                    <li><i class="fas fa-tag"></i> Special member discounts</li>
+                    <li><i class="fas fa-check"></i> Easy online booking</li>
+                    <li><i class="fas fa-shield-alt"></i> Secure payment system</li>
+                    <li><i class="fas fa-star"></i> Premium service quality</li>
+                    <li><i class="fas fa-percentage"></i> Exclusive member discounts</li>
                     <li><i class="fas fa-clock"></i> 24/7 customer support</li>
                 </ul>
             </div>
@@ -503,20 +653,10 @@
                     <p>Fill in your details to get started</p>
                 </div>
 
-                <form method="post">
+                <form method="post" class="register-form" id="registerForm">
                     {% csrf_token %}
-                    <input type="hidden" name="account_type" id="account_type" value="customer">
-
-                    <div class="account-type">
-                        <div class="account-type-option selected" id="customer-option" data-type="customer">
-                            <i class="fas fa-user"></i>
-                            <div>Customer</div>
-                        </div>
-                        <div class="account-type-option" id="provider-option" data-type="provider">
-                            <i class="fas fa-store"></i>
-                            <div>Service Provider</div>
-                        </div>
-                    </div>
+                    <!-- TODO: Need to add account_type input to the backend -->
+                    <input type="hidden" name="account_type" id="account_type" value='customer'>
 
                     <div class="input-group">
                         <i class="fas fa-user"></i>
@@ -556,20 +696,17 @@
 
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
-                        <label for="id_password1">Password</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}
-                        <div class="error-message">{{ form.password1.errors.0 }}</div>
-                        {% endif %}
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
                     </div>
 
                     <div class="input-group">
                         <i class="fas fa-lock"></i>
-                        <label for="id_password2">Confirm Password</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}
-                        <div class="error-message">{{ form.password2.errors.0 }}</div>
-                        {% endif %}
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                        <div class="password-match" id="passwordMatch">
+                            <i class="fas fa-circle"></i> Passwords must match
+                        </div>
                     </div>
 
                     <div class="terms">
@@ -612,15 +749,6 @@
                         <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h3><i class="fas fa-link"></i> Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
-                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
-                    </ul>
                 </div>
                 <div class="footer-section">
                     <h3><i class="fas fa-info-circle"></i> Support</h3>
@@ -683,6 +811,72 @@
         setInterval(updateTime, 1000);
     </script>
 
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            // Check password match
+            const matchElement = document.getElementById('passwordMatch');
+            const submitButton = document.querySelector('button[type="submit"]');
+            
+            if (password && confirmPassword) {
+                if (password === confirmPassword) {
+                    matchElement.classList.add('valid');
+                    submitButton.disabled = false;
+                } else {
+                    matchElement.classList.remove('valid');
+                    submitButton.disabled = true;
+                }
+            }
+        }
+
+        document.getElementById('password').addEventListener('input', validatePassword);
+        document.getElementById('confirm_password').addEventListener('input', validatePassword);
+    </script>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const submitButton = document.querySelector('.register-button');
+
+        function validatePasswords() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const matchElement = document.getElementById('passwordMatch');
+            
+            if (password && confirmPassword) {
+                if (password === confirmPassword) {
+                    matchElement.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+                    matchElement.style.color = '#22c55e';
+                    submitButton.disabled = false;
+                } else {
+                    matchElement.innerHTML = '<i class="fas fa-times-circle"></i> Passwords do not match';
+                    matchElement.style.color = '#ef4444';
+                    submitButton.disabled = true;
+                }
+            }
+        }
+
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmPasswordInput.addEventListener('input', validatePasswords);
+
+        // Password visibility toggle
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.navbar-toggler').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+    </script>
 </body>
 
 </html>
