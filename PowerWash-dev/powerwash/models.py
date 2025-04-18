@@ -63,6 +63,7 @@ def manage_user_profile(sender, instance, created, **kwargs):
 
 
 class ServicePage(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=120)
     content = models.TextField()
 

@@ -69,6 +69,7 @@ def register_user(request):
 # View for the home page
 def home(request):
     """Renders the home page."""
+
     return render(request, 'home.html')
 
 # View for the index page (password form example)

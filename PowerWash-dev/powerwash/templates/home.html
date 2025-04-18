@@ -449,7 +449,16 @@
             <h1>Professional Car Care Services</h1>
             <p class="lead mb-4">Experience the ultimate car cleaning service with our expert detailing team</p>
             <div class="cta-buttons">
-                <a href="{% url 'register' %}" class="get-started-btn">Get Started</a>
+                {% if user.is_authenticated %}
+                    {% if user.profile.account_type == 'customer' %}
+                        <a href="{% url 'customer_dashboard' %}" class="get-started-btn">Go to Dashboard</a>
+                    {% else %}
+                        <a href="{% url 'provider_dashboard' %}" class="get-started-btn">Go to Dashboard</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'register' %}" class="get-started-btn">Get Started</a>
+                {% endif %}
+
             </div>
         </div>
     </div>
