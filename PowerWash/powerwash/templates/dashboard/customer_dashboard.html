@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - PowerWash</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #00a8e8;
+            --accent-color: #ffd700;
+            --white: #ffffff;
+            --text-color: #333333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .bookings-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .booking-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .booking-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-item {
+            padding: 0.875rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .logo-container {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-container h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .logo-container i {
+            color: var(--accent-color);
+            font-size: 1.75rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: #64748b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            padding-left: 1.25rem;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer styles from home page */
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 3rem 0;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .footer p {
+            color: #cbd5e1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section h3 i {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li i {
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .booking-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content, .footer {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            background: rgba(0, 86, 179, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .stat-info h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .stat-info p {
+            margin: 0.25rem 0 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .locations-section {
+            margin-top: 3rem;
+        }
+
+        .locations-section h2 {
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .location-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .location-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .location-card h3 {
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .location-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background: var(--secondary-color);
+            transform: translateX(5px);
+        }
+
+        .no-appointments {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .no-appointments i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .book-now-btn {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .book-now-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .appointments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .appointment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .appointment-header i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .appointment-header span {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .appointment-details p {
+            margin-bottom: 0.5rem;
+            color: #64748b;
+        }
+
+        .appointment-details strong {
+            color: #1e293b;
+        }
+
+        .appointment-status {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: right;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #10b981;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="content-wrapper">
+            <aside class="sidebar">
+                <div class="logo-container">
+                    <h2><i class="fas fa-car-wash"></i> PowerWash</h2>
+                </div>
+                <nav class="dashboard-nav">
+                    <div class="nav-section">
+                        <div class="nav-section-title">Main Menu</div>
+                        <div class="nav-item active">
+                            <a href="{% url 'customer_dashboard' %}">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="{% url 'booking' %}">
+                                <i class="fas fa-calendar"></i>
+                                <span>Book a Service</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="{% url 'history' %}">
+                                <i class="fas fa-history"></i>
+                                <span>History</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="nav-section">
+                        <div class="nav-section-title">Account</div>
+                        <div class="nav-item">
+                            <a href="{% url 'profile' %}">
+                                <i class="fas fa-user"></i>
+                                <span>Profile</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a href="{% url 'settings' %}">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <form action="{% url 'logout' %}" method="POST" id="logout-form">
+                                {% csrf_token %}
+                                <a href="#" onclick="document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <div class="dashboard-header">
+                    <h1>Welcome Back, {{ user.first_name }}!</h1>
+                    <p>Here's an overview of your car wash services</p>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="stat-info">
+                            <h3>Upcoming Bookings</h3>
+                            <p>{{ upcoming_bookings.count }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-history"></i>
+                        <div class="stat-info">
+                            <h3>Past Services</h3>
+                            <p>{{ past_services.count }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-star"></i>
+                        <div class="stat-info">
+                            <h3>Loyalty Points</h3>
+                            <p>{{ loyalty_points|default:"0" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if upcoming_bookings %}
+                <div class="upcoming-appointments">
+                    <h2>Upcoming Appointments</h2>
+                    <div class="appointments-grid">
+                        {% for booking in upcoming_bookings %}
+                        <div class="appointment-card">
+                            <div class="appointment-header">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ booking.date }}</span>
+                            </div>
+                            <div class="appointment-details">
+                                <p><strong>Service:</strong> {{ booking.get_service_type_display }}</p>
+                                <p><strong>Time:</strong> {{ booking.time }}</p>
+                                <p><strong>Vehicle:</strong> {{ booking.vehicle_type|title }}</p>
+                                {% if booking.special_requests %}
+                                <p><strong>Special Requests:</strong> {{ booking.special_requests }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="appointment-status">
+                                {% if booking.status == 'pending' %}
+                                {% endif %}
+                                <span class="status-badge">{{ booking.status|title }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-appointments">
+                    <i class="fas fa-calendar-plus"></i>
+                    <h3>No Upcoming Appointments</h3>
+                    <p>Schedule your next car wash service today!</p>
+                    <a href="{% url 'booking' %}" class="book-now-btn">Book Now</a>
+                </div>
+                {% endif %}
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3><i class="fas fa-car-wash"></i> PowerWash</h3>
+                        <p>Connecting car owners with professional cleaning services since 2025.</p>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3><i class="fas fa-info-circle"></i> Support</h3>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-question-circle"></i><a href="/faq.html">FAQ</a></li>
+                            <li><i class="fas fa-shield-alt"></i><a href="/privacy.html">Privacy Policy</a></li>
+                            <li><i class="fas fa-file-contract"></i><a href="/terms.html">Terms of Service</a></li>
+                            <li><i class="fas fa-headset"></i><a href="/help.html">Help Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h3><i class="fas fa-address-card"></i> Contact Us</h3>
+                        <ul class="footer-links">
+                            <li><i class="fas fa-envelope"></i> support@powerwash.com</li>
+                            <li><i class="fas fa-phone"></i> +1 (555) 555-5555</li>
+                            <li><i class="fas fa-map-marker-alt"></i> TBA</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 PowerWash. All rights reserved. | Created by ManoBG02</p>
+                    <p>Current UTC Time: <span id="current-time">2025-04-01 02:25:11</span></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        // Update the current time
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            timeElement.textContent = now.toISOString().replace('T', ' ').substr(0, 19);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>

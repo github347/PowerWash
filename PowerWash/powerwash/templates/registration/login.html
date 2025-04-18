@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PowerWash</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #00a8e8;
+            --accent-color: #ffd700;
+            --white: #ffffff;
+            --text-color: #333333;
+            --error-color: #ef4444;
+            --font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: var(--font-family);
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 110, 255, 0.4), rgba(0, 168, 232, 0.3));
+            padding: 6rem 2rem 4rem;
+            padding-top: 80px;
+            margin: 0;
+            border: none;
+        }
+
+        .login-container {
+            display: flex;
+            width: 1200px;
+            max-width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin: 0 auto;
+            min-height: 600px;
+        }
+
+        .login-image {
+            flex: 1;
+            background: linear-gradient(rgba(37, 100, 235, 0.592), rgba(30, 64, 175, 0.9));
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            color: var(--white);
+            width: 45%;
+        }
+
+        .login-form-container {
+            flex: 1;
+            padding: 4rem;
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            width: 100%;
+
+        }
+
+        .form-header h1 {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-header p {
+            color: #64748b;
+            font-weight: 300;
+            font-size: 1.1rem;
+        }
+
+
+        /* Form Input Styles */
+        .input-group {
+            position: relative;
+            margin-bottom: 2rem;
+            max-width: 340px;
+            margin-left: 2.2rem;
+            margin-right: auto;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: white;
+            font-family: var(--font-family);
+        }
+
+        .input-group input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .input-group input[type="password"] {
+            letter-spacing: 0.1em;
+        }
+
+        .input-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 3rem;
+            top: -0.75rem;
+            background: white;
+            padding: 0 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: var(--font-family);
+            color: #64748b;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            font-size: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .login-button {
+            width: 100%;
+            max-width: 340px;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            height: 3rem;
+        }
+
+        .login-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 2rem;
+            color: #64748b;
+            width: 100%;
+            font-size: 1rem;
+
+        }
+
+        .register-link a {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: var(--secondary-color);
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 1.1rem;
+            color: #ffffff;
+        }
+
+        .benefits-list li i {
+            background: rgba(255, 255, 255, 0.2);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 4rem 0;
+            margin-top: 6rem;
+            border-top: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer p {
+            color: #cbd5e1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            padding: 0 1rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section h3 i {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+        }
+
+        .footer-links {
+            margin: 0;
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li i {
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .login-image {
+                display: none;
+            }
+
+            .login-form-container {
+                width: 100%;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Add navbar after <body> tag -->
+    <nav class="navbar">
+        <div class="navbar-container container">
+            <a href="{% url 'home' %}" class="logo">
+                <i class="fas fa-car-wash"></i> PowerWash
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="login-page">
+        <div class="login-container">
+            <!-- Left side with image -->
+            <div class="login-image">
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">Welcome Back!</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Log in to access your account and manage your car
+                    care services.</p>
+                <ul class="benefits-list">
+                    <li><i class="fas fa-history"></i> View booking history</li>
+                    <li><i class="fas fa-calendar-check"></i> Manage appointments</li>
+                    <li><i class="fas fa-percent"></i> Access special offers</li>
+                    <li><i class="fas fa-star"></i> Rate your experiences</li>
+                </ul>
+            </div>
+
+            <!-- Right side with form -->
+            <div class="login-form-container">
+                <div class="form-header">
+                    <h1>Welcome Back</h1>
+                    <p>Please login to your account</p>
+                </div>
+
+                <form method="post" style="width: 100%;">
+                    {% csrf_token %}
+            
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <label for="id_username">Username</label>
+                        <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required>
+                    </div>
+            
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <label for="id_password">Password</label>
+                        <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        Login
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+
+                    <div class="register-link">
+                        Don't have an account? <a href="{% url 'register' %}">Sign up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this before </body> -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-car-wash"></i> PowerWash</h3>
+                    <p>Connecting car owners with professional cleaning services since 2025.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Support</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-question-circle"></i><a href="/faq.html">FAQ</a></li>
+                        <li><i class="fas fa-shield-alt"></i><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><i class="fas fa-file-contract"></i><a href="/terms.html">Terms of Service</a></li>
+                        <li><i class="fas fa-headset"></i><a href="/help.html">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-address-card"></i> Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> support@powerwash.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 555-5555</li>
+                        <li><i class="fas fa-map-marker-alt"></i> TBA</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PowerWash. All rights reserved. | Created by ManoBG02</p>
+                <p>Current UTC Time: <span id="current-time">2025-04-01 02:25:11</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            timeElement.textContent = now.toISOString().replace('T', ' ').substr(0, 19);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>

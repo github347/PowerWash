@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Service - PowerWash</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #00a8e8;
+            --accent-color: #ffd700;
+            --white: #ffffff;
+            --text-color: #333333;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            background: #f8fafc;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .service-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .service-option {
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-option:hover::before {
+            opacity: 1;
+        }
+
+        .service-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(0, 86, 179, 0.05);
+        }
+
+        .service-option h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .service-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+
+        .service-price::before {
+            content: '$';
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 0;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: #4b5563;
+        }
+
+        .features-list li i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-label i {
+            color: var(--primary-color);
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.875rem;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2rem auto 0;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer {
+            background-color: #1e293b;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            margin-left: var(--sidebar-width);
+        }
+
+        .footer p {
+            color: #cbd5e1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section h3 i {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li i {
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-icon:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item {
+            padding: 0.875rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .logo-container {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-container h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .logo-container i {
+            color: var(--accent-color);
+            font-size: 1.75rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: #64748b;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            padding-left: 1.25rem;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .footer {
+                margin-left: 0;
+            }
+
+            .service-options {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-form-container {
+                padding: 1.5rem;
+            }
+        }
+
+        .payment-section {
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+            border: 1px solid #e2e8f0;
+        }
+
+        .payment-section input {
+            font-family: monospace;
+        }
+
+        #cardNumber {
+            letter-spacing: 0.5px;
+        }
+
+        #cvv {
+            letter-spacing: 0.5px;
+        }
+
+        .booking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            position: relative;
+            flex: 1;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step i {
+            font-size: 1.5rem;
+            background: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #e2e8f0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .step span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: var(--primary-color);
+        }
+
+        .step.active i {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed i {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: white;
+        }
+
+        .step.completed::after {
+            background: var(--secondary-color);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .success-message {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .booking-success {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .success-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: checkmarkBounce 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .checkmark-circle i {
+            color: white;
+            font-size: 2.5rem;
+            animation: checkmarkScale 0.3s ease-in-out 0.2s both;
+        }
+
+        .booking-details {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-item i {
+            color: var(--primary-color);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes checkmarkBounce {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes checkmarkScale {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .book-again-btn, .view-bookings-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .book-again-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .view-bookings-btn {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .book-again-btn:hover, .view-bookings-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .book-again-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .view-bookings-btn:hover {
+            background: #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <h2><i class="fas fa-car-wash"></i> PowerWash</h2>
+            </div>
+            <nav class="dashboard-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main Menu</div>
+                    <div class="nav-item">
+                        <a href="{% url 'customer_dashboard' %}">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </div>
+                    <div class="nav-item active">
+                        <a href="{% url 'booking' %}">
+                            <i class="fas fa-calendar"></i>
+                            <span>Book a Service</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="{% url 'history' %}">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    <div class="nav-item">
+                        <a href="{% url 'profile' %}">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="{% url 'settings' %}">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                        <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+                            {% csrf_token %}
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h1>Book a Service</h1>
+                <p>Select your preferred service and schedule an appointment</p>
+            </div>
+
+            <div class="booking-steps">
+                <div class="step active" id="step1">
+                    <i class="fas fa-car"></i>
+                    <span>Select Service</span>
+                </div>
+                <div class="step" id="step2">
+                    <i class="fas fa-calendar"></i>
+                    <span>Schedule</span>
+                </div>
+                <div class="step" id="step4">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payment</span>
+                </div>
+            </div>
+
+            <form method="POST" class="booking-form-container">
+                {% csrf_token %}
+
+                <h2 class="mb-4">Choose a Service</h2>
+                <div class="service-options">
+
+                    {% for i in services %}
+                        <div class="service-option" onclick="selectService(this, 'mini')">
+                        <h3>{{ i.name }}</h3>
+                        <h4>By {{ i.page.title }}</h4>
+                        <div class="service-price">{{ i.price }}</div>
+                        <div>{{ i.description }}</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Exterior Wash</li>
+                            <li><i class="fas fa-check"></i> Interior Vacuum</li>
+                            <li><i class="fas fa-check"></i> Window Cleaning</li>
+                            <li><i class="fas fa-check"></i> Tire Dressing</li>
+                        </ul>
+                        <input type="radio" name="service_type" value="mini" class="d-none">
+                    </div>
+                    {% endfor %}
+
+
+                    <div class="service-option" onclick="selectService(this, 'mini')">
+                        <h3>Mini Valet</h3>
+                        <div class="service-price">29.99</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Exterior Wash</li>
+                            <li><i class="fas fa-check"></i> Interior Vacuum</li>
+                            <li><i class="fas fa-check"></i> Window Cleaning</li>
+                            <li><i class="fas fa-check"></i> Tire Dressing</li>
+                        </ul>
+                        <input type="radio" name="service_type" value="mini" class="d-none">
+                    </div>
+
+                    <div class="service-option" onclick="selectService(this, 'full')">
+                        <h3>Deep Clean</h3>
+                        <div class="service-price">59.99</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> All Mini Valet Services</li>
+                            <li><i class="fas fa-check"></i> Interior Deep Clean</li>
+                            <li><i class="fas fa-check"></i> Leather Treatment</li>
+                            <li><i class="fas fa-check"></i> Dashboard Polish</li>
+                        </ul>
+                        <input type="radio" name="service_type" value="full" class="d-none">
+                    </div>
+
+                    <div class="service-option" onclick="selectService(this, 'premium')">
+                        <h3>Wax and Polish</h3>
+                        <div class="service-price">99.99</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> All Deep Clean Services</li>
+                            <li><i class="fas fa-check"></i> Paint Protection</li>
+                            <li><i class="fas fa-check"></i> Engine Bay Clean</li>
+                            <li><i class="fas fa-check"></i> Ceramic Coating</li>
+                        </ul>
+                        <input type="radio" name="service_type" value="premium" class="d-none">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Schedule Your Appointment</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i> Preferred Date
+                                </label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-clock"></i> Preferred Time
+                                </label>
+                                <select class="form-control" name="time" required>
+                                    <option value="">Select a time</option>
+                                    <option value="09:00">09:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">01:00 PM</option>
+                                    <option value="14:00">02:00 PM</option>
+                                    <option value="15:00">03:00 PM</option>
+                                    <option value="16:00">04:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-car"></i> Vehicle Type
+                                </label>
+                                <select class="form-control" name="vehicle_type" required>
+                                    <option value="">Select vehicle type</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="truck">Truck</option>
+                                    <option value="van">Van</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-comment"></i> Special Requests
+                                </label>
+                                <textarea class="form-control" name="special_requests" rows="3"
+                                    placeholder="Any special instructions or requests?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section payment-section">
+                    <h3><i class="fas fa-credit-card"></i> Payment Details</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-credit-card"></i> Card Number
+                                </label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user"></i> Cardholder Name
+                                </label>
+                                <input type="text" class="form-control" id="cardName" placeholder="John Doe" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i> Expiration Date
+                                </label>
+                                <input type="text" class="form-control" id="expDate" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> CVV
+                                </label>
+                                <input type="password" class="form-control" id="cvv" placeholder="123" maxlength="4" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-calendar-check"></i>
+                    Confirm Booking
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-car-wash"></i> PowerWash</h3>
+                    <p>Connecting car owners with professional cleaning services since 2025.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-link"></i> Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-angle-right"></i><a href="/about.html">About Us</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/services.html">Services</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/providers.html">For Providers</a></li>
+                        <li><i class="fas fa-angle-right"></i><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> Support</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-question-circle"></i><a href="/faq.html">FAQ</a></li>
+                        <li><i class="fas fa-shield-alt"></i><a href="/privacy.html">Privacy Policy</a></li>
+                        <li><i class="fas fa-file-contract"></i><a href="/terms.html">Terms of Service</a></li>
+                        <li><i class="fas fa-headset"></i><a href="/help.html">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-address-card"></i> Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> support@powerwash.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 555-5555</li>
+                        <li><i class="fas fa-map-marker-alt"></i> TBA</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 PowerWash. All rights reserved. | Created by ManoBG02</p>
+                <p>Current UTC Time: <span id="current-time">2025-04-01 02:25:11</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function selectService(element, serviceType) {
+            // Remove selected class from all options
+            document.querySelectorAll('.service-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            element.classList.add('selected');
+
+            // Check the radio button
+            element.querySelector('input[type="radio"]').checked = true;
+        }
+
+        // Set minimum date to today
+        const dateInput = document.querySelector('input[type="date"]');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.min = today;
+
+        // Update the current time
+        function updateTime() {
+            const timeElement = document.getElementById('current-time');
+            const now = new Date();
+            timeElement.textContent = now.toISOString().replace('T', ' ').substr(0, 19);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        document.getElementById('expDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0,2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Mock payment processing
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            
+            // Show loading overlay
+            document.querySelector('.loading-overlay').style.display = 'flex';
+            
+            // Get selected date
+            const selectedDate = document.querySelector('input[name="date"]').value;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Hide loading overlay
+                document.querySelector('.loading-overlay').style.display = 'none';
+                
+                // Update confirmation details
+                document.getElementById('confirmed-date').textContent = new Date(selectedDate).toLocaleDateString();
+                
+                // Show success animation
+                const successScreen = document.querySelector('.booking-success');
+                successScreen.style.display = 'flex';
+                
+                // Hide success screen and submit form after delay
+                setTimeout(() => {
+                    successScreen.style.display = 'none';
+                    this.submit();
+                }, 3000);
+            }, 2000);
+        });
+
+        // Update steps based on form progress
+        const formSections = document.querySelectorAll('.form-section');
+        const steps = document.querySelectorAll('.step');
+
+        formSections.forEach((section, index) => {
+            const inputs = section.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    const allFilled = Array.from(inputs).every(input => input.value);
+                    if (allFilled) {
+                        steps[index].classList.add('completed');
+                        if (steps[index + 1]) {
+                            steps.forEach(s => s.classList.remove('active'));
+                            steps[index + 1].classList.add('active');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <div class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Processing your booking...</p>
+        </div>
+    </div>
+
+    <div class="success-message">
+        <i class="fas fa-check-circle"></i>
+        <span>Booking confirmed successfully!</span>
+    </div>
+
+    <div class="booking-success">
+        <div class="success-content">
+            <div class="checkmark-circle">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3>Booking Confirmed!</h3>
+            <p>Your car wash appointment has been scheduled.</p>
+            <div class="booking-details">
+                <div class="detail-item">
+                    <i class="fas fa-calendar"></i>
+                    <span id="confirmed-date"></span>
+                </div>
+            </div>
+            <div class="success-actions">
+                <a href="{% url 'booking' %}" class="book-again-btn">Book Another Service</a>
+                <a href="{% url 'customer_dashboard' %}" class="view-bookings-btn">View My Bookings</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
