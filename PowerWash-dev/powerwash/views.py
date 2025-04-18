@@ -362,4 +362,11 @@ def update_profile_image(request):
 
 @login_required
 def provider_dashboard(request):
+
+    # user = request.user
+    # service_page = ServicePage.objects.filter(user=user)
+    # services = service_page.service_set.all()
+
+
+
     return render(request, 'dashboard/provider_dashboard.html')

@@ -73,6 +73,7 @@ class ServicePage(models.Model):
 class Service(models.Model):
     page = models.ForeignKey(ServicePage, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
+    #price = models.DecimalField(decimal_places=2, max_digits=20)
     complete = models.BooleanField(default=False)
 
     def __str__(self):
