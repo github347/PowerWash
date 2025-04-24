@@ -29,7 +29,7 @@ To get started with the Power Wash project locally, follow the steps below:
 
 ### 1. Clone the Repository
 
-git clone https://github.com/yourusername/PowerWash-dev.git
+git clone https://github.com/github347/PowerWash.git
 
 ### 2. Navigate to the Project Folder
 
