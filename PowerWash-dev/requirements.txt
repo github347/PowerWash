@@ -1,0 +1,8 @@
+asgiref==3.5.2
+Django==4.1.1
+django-smoke-tests==2.1.0
+djangorestframework==3.14.0
+numpy==1.26.4
+pillow==11.1.0
+pytz==2022.2.1
+sqlparse==0.4.3
